@@ -55,7 +55,7 @@ def getCelsius():
 	celsius = round(celsius,1) # celsius rounded to one decimal place
 	return celsius
 
-@app.route('/')
+@app.route('/test')
 def index():
 	return render_template('index.html', 
                            fahrenheit=getFahrenheit(),
@@ -71,11 +71,11 @@ def index():
                            processInfo=getProcessInfo()
                           )
 
-@app.route("/api/status")
+@app.route("/")
 def status():
-    data = {"temp": getCelsius()}
-    return jsonify(data)
+    return render_template('index2.html')
 
 if __name__ == '__main__':
     initialize_routes(api)
-    app.run(host='0.0.0.0')
+    #app.run(host='0.0.0.0')
+    app.run()
