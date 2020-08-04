@@ -1,217 +1,311 @@
 <!DOCTYPE html>
-<html>
-
+<!--
+This is a starter template page. Use this page to start your new project from
+scratch. This page gets rid of all links and provides the needed markup only.
+-->
+<html lang="en">
 <head>
-    <!--Import Google Icon Font-->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!--Import materialize.css-->
-    <link type="text/css" rel="stylesheet" href="../static/css/materialize.min.css" media="screen,projection" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <link rel="icon" 
+      type="image/png" 
+      href="{{url_for('static', filename='./images/pilogo.svg.png')}}">
 
-    <!--Let browser know website is optimized for mobile-->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>rpi-status-monitor</title>
+  <title>Nathan & Yuqi Home System</title>
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="{{url_for('static', filename='./fonts/fontawesome-free/css/all.min.css')}}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{{url_for('static', filename='./css/adminlte.min.css')}}">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <link rel="stylesheet" href="{{url_for('static', filename='./css/app.css')}}">
 </head>
+<body class="hold-transition layout-top-nav">
+<div class="wrapper">
 
-<body class="red lighten-5">
-
-    <!--<nav class="light-blue lighten-1" role="navigation">
-			<div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">Logo</a>
-				<ul class="right hide-on-med-and-down">
-					<li><a href="#">Navbar Link</a></li>
-				</ul>
-
-				<ul id="nav-mobile" class="side-nav">
-					<li><a href="#">Navbar Link</a></li>
-				</ul>
-				<a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
-			</div>
-		</nav>-->
-
-    <div class="section no-pad-bot" id="index-banner">
-        <div class="container">
-            <br>
-            <br>
-            <div class="header center">
-                <img src="static/images/pilogo.svg.png" style="width:10%; height:auto"/>            
-            </div>
-            <div class="row center">
-		<p id="currentTime"></p>
-		<p id="tempInC"></p>
-                <h5 class="header col s12 light">IP Address: {{ ipAddress }}</h5>
-            </div>
-        </div>
-    </div>
-
-
+  <!-- Navbar -->
+  <nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
     <div class="container">
-        <div class="section">
+      <a href="/test2" class="navbar-brand">
+        <img src="{{url_for('static', filename='./images/pi.png')}}" alt="Raspberry=Pi Logo" class="brand-image img-circle elevation-2"
+             style="opacity: .8">
+        <span class="brand-text font-weight-light">Nathan & Yuqi Home System</span>
+      </a>
+      
+      <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-            <!--   Icon Section   -->
-            <div class="row">
+      <div class="collapse navbar-collapse order-3" id="navbarCollapse">
+        <!-- Left navbar links -->
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a href="/test2" class="nav-link">Home</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">More</a>
+            <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
+              <li><a href="#" class="dropdown-item">Some action </a></li>
+              <li><a href="#" class="dropdown-item">Some other action</a></li>
+            </ul>
+          </li>
+        </ul>
 
-                <!-- temperature -->
-                <div class="col s12 m4">
-                    <div class="icon-block">
-                        <h2 class="center light-green-text darken-1">Temperature</h2>
-                        <div class="center">  
-                            <!-- Dropdown Trigger -->
-                            <a class='dropdown-button btn' href='#' data-activates='dropdown1'>{{ fahrenheit }}&deg; F</a>
-
-                            <!-- Dropdown Structure -->
-                            <ul id='dropdown1' class='dropdown-content'>
-                            <li><a href="#!">{{ celsius }}&deg; C</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- disk usage -->
-                <div class="col s12 m4">
-                    <div class="icon-block">
-                        <h2 class="center light-green-text darken-1">Disk Usage</h2>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th data-field="filesystem">{{ diskUsageHeader[0] }}</th>
-                                    <th data-field="size">{{ diskUsageHeader[1] }}</th>
-                                    <th data-field="used">{{ diskUsageHeader[2] }}</th>
-                                    <th data-field="available">{{ diskUsageHeader[3] }}</th>
-                                    <th data-field="usePercentage">{{ diskUsageHeader[4] }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>{{ diskUsageInfo[0] }}</td>
-                                    <td>{{ diskUsageInfo[1] }}</td>
-                                    <td>{{ diskUsageInfo[2] }}</td>
-                                    <td>{{ diskUsageInfo[3] }}</td>
-                                    <td>{{ diskUsageInfo[4] }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                
-                <!-- uptime -->
-                <div class="col s12 m4">
-                    <div class="icon-block">
-                        <h2 class="center light-green-text darken-1">Uptime</h2>
-                        <h5 class="center">{{ upTime[0] }} Days<br>{{ upTime[1] }} Hours<br>{{ upTime[2] }} Minutes</h5>
-                    </div>
-                </div>
-
+        <!-- SEARCH FORM -->
+        <form class="form-inline ml-0 ml-md-3">
+          <div class="input-group input-group-sm">
+            <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+            <div class="input-group-append">
+              <button class="btn btn-navbar" type="submit">
+                <i class="fas fa-search"></i>
+              </button>
             </div>
-            
-            <!-- second row -->
-            <div class="row">
-
-                <!-- memory usage -->
-                <div class="col s12 m4">
-                    <div class="icon-block">
-                        <h2 class="center light-green-text darken-1">Memory Usage</h2>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th data-field="total">Size</th>
-                                    <th data-field="used">Used</th>
-                                    <th data-field="free">Avail</th>
-                                    <th data-field="usePercentage">Use %</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>{{ memoryUsageInfo[1] }}MB</td>
-                                    <td>{{ memoryUsageInfo[2] }}MB</td>
-                                    <td>{{ memoryUsageInfo[3] }}MB</td>
-                                    <td>{{ memoryUsePercentage }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                
-                <!-- Process Info -->
-                <div class="col s12 m4">
-                    <div class="icon-block">
-                        <h2 class="center light-green-text darken-1">Tasks</h2>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th data-field="total">Total</th>
-                                    <th data-field="used">Running</th>
-                                    <th data-field="sleep">Sleeping</th>
-                                    <th data-field="stopped">Stopped</th>
-                                    <th data-field="zombie">Zombie</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>{{ processInfo[1] }}</td>
-                                    <td>{{ processInfo[3] }}</td>
-                                    <td>{{ processInfo[5] }}</td>
-                                    <td>{{ processInfo[7] }}</td>
-                                    <td>{{ processInfo[9] }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-        <br>
-        <br>
-
-        <div class="section">
-
-        </div>
-    </div>
-
-    <!--<footer class="page-footer orange">
-    <div class="container">
-      <div class="row">
-        <div class="col l6 s12">
-          <h5 class="white-text">Company Bio</h5>
-          <p class="grey-text text-lighten-4">We are a team of college students working on this project like it's our full time job. Any amount would help support and continue development on this project and is greatly appreciated.</p>
-
-
-        </div>
-        <div class="col l3 s12">
-          <h5 class="white-text">Settings</h5>
-          <ul>
-            <li><a class="white-text" href="#!">Link 1</a></li>
-            <li><a class="white-text" href="#!">Link 2</a></li>
-            <li><a class="white-text" href="#!">Link 3</a></li>
-            <li><a class="white-text" href="#!">Link 4</a></li>
-          </ul>
-        </div>
-        <div class="col l3 s12">
-          <h5 class="white-text">Connect</h5>
-          <ul>
-            <li><a class="white-text" href="#!">Link 1</a></li>
-            <li><a class="white-text" href="#!">Link 2</a></li>
-            <li><a class="white-text" href="#!">Link 3</a></li>
-            <li><a class="white-text" href="#!">Link 4</a></li>
-          </ul>
-        </div>
+          </div>
+        </form>
       </div>
     </div>
-    <div class="footer-copyright">
+  </nav>
+  <!-- /.navbar -->
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
       <div class="container">
-      Made by <a class="orange-text text-lighten-3" href="http://materializecss.com">Materialize</a>
-      </div>
+        <div class="row mb-2">
+          <div class="col-sm-8">
+		    <div class="row">
+              <h1 class="m-0 text-dark"> Home </h1>&nbsp;&nbsp;&nbsp;&nbsp;
+			  <div id="currentTime" style="text-align:justify"></div>
+			</div>
+			<div></div>
+          </div><!-- /.col -->
+          <div class="col-sm-4">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="">Home</a></li>
+              <li class="breadcrumb-item"></li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
     </div>
-  </footer>-->
+    <!-- /.content-header -->
 
+    <!-- Main content -->
+    <div class="content">
+      <div class="container">
+		<div class="row">
+		  <div class="col-lg-8">
+		    <div class="card card-primary card-outline">
+			  <div class="card-header">
+                <h5 class="card-title m-0">System Information</h5>
+              </div>
+              <div class="card-body">
+				  <dl class="row">
+                  <dt class="col-sm-4">System Name & Verison</dt>
+                  <dd class="col-sm-8" id="system-info"></dd>
+                  <dt class="col-sm-4">Model</dt>
+                  <dd class="col-sm-8" id="model-name"></dd>
+                  <dt class="col-sm-4">CPU Model Name</dt>
+                  <dd class="col-sm-8" id="cpu-model"></dd>
+                  <dt class="col-sm-4">Core #</dt>
+                  <dd class="col-sm-8" id="cpu-core"></dd>
+				  <dt class="col-sm-4">MAC Address</dt>
+                  <dd class="col-sm-8" id="mac-address"></dd>
+				  <dt class="col-sm-4">Public IP Address</dt>
+                  <dd class="col-sm-8" id="public-ip"></dd>
+				  <dt class="col-sm-4">Uptime</dt>
+                  <dd class="col-sm-8" id="uptime"></dd>
+				  <dt class="col-sm-4">Last Time Reboot</dt>
+                  <dd class="col-sm-8" id="last-time"></dd>
+				  <dt class="col-sm-4">Current Location</dt>
+                  <dd class="col-sm-8" id="location"></dd>
+                </dl>
+              </div>
+            </div>
+		  </div>
+		  <div class="col-lg-4">
+		    <div class="card card-primary card-outline">
+			  <div class="card-header">
+                <h5 class="card-title m-0">WIFI Information</h5>
+              </div>
+              <div class="card-body">
+				  <dl class="row">
+                  <dt class="col-sm-5">WIFI Name</dt>
+                  <dd class="col-sm-7" id="wifi-name"></dd>
+                  <dt class="col-sm-5">Other Devices on WIFI</dt>
+                  <dd class="col-sm-7" id="wifi-device"></dd>
+				  <dt class="col-sm-5">Link Quality</dt>
+                  <dd class="col-sm-7" id="wifi-quality"></dd>
+				  <dt class="col-sm-5">Signal Level</dt>
+                  <dd class="col-sm-7" id="wifi-signal"></dd>
+				  <dt class="col-sm-5">IPv4 Address</dt>
+                  <dd class="col-sm-7" id="ipv4"></dd>
+				  <dt class="col-sm-5">IPv6 Address</dt>
+                  <dd class="col-sm-7" id="ipv6"></dd>
+				  <dt class="col-sm-5">Gateway</dt>
+                  <dd class="col-sm-7"><a target="_blank" href="http://10.0.0.1">Link</a></dd>
+                </dl>
+              </div>
+            </div>
+		  </div>
+		</div>
+        <div class="row">
+          <div class="col-lg-4">
+            <div class="card card-primary card-outline">
+			  <div class="card-header">
+                <h5 class="card-title m-0">Memory Usage</h5>
+              </div>
+              <div class="card-body">
+				  <div class="progress">
+					  <div class="progress-bar bg-primary progress-bar-striped" id="memory-usage-progbar" role="progressbar"
+						   aria-valuemin="0" aria-valuemax="100" style="">
+					  </div>
+				  </div>
+				  <dl class="row">
+				    <dt class="col-sm-4">Total</dt>
+                    <dd class="col-sm-8" id="mem-total"></dd>
+					<dt class="col-sm-4">Used</dt>
+                    <dd class="col-sm-8" id="mem-used"></dd>
+					<dt class="col-sm-4">Available</dt>
+                    <dd class="col-sm-8" id="mem-avai"></dd>
+				  </dl>
+              </div>
+            </div>
+          </div>
+		  <div class="col-lg-8">
+            <div class="card card-primary card-outline">
+			  <div class="card-header">
+                <h5 class="card-title m-0">Processor Status</h5>
+              </div>
+              <div class="card-body">
+			    <table class="table table-bordered">
+				  <thead>
+				    <tr>
+					  <th>Total</th>
+					  <th>Running</th>
+					  <th>Sleeping</th>
+					  <th>Stopped</th>
+					  <th>Zombie</th>
+					</tr>
+				  </thead>
+				  <tbody>
+				    <tr id="processor-content">
+					</tr>
+				  </tbody>
+				</table>
+              </div>
+            </div>
+          </div>
+        </div>
+		<div class="row">
+		  <div class="col-lg-4">
+            <div class="card card-primary card-outline">
+			  <div class="card-header">
+                <h5 class="card-title m-0">Memory Usage</h5>
+              </div>
+              <div class="card-body">
+				  <div class="progress">
+					  <div class="progress-bar bg-primary progress-bar-striped" id="memory-usage-progbar" role="progressbar"
+						   aria-valuemin="0" aria-valuemax="100" style="">
+					  </div>
+				  </div>
+				  <dl class="row">
+				    <dt class="col-sm-4">Total</dt>
+                    <dd class="col-sm-8" id="mem-total"></dd>
+					<dt class="col-sm-4">Used</dt>
+                    <dd class="col-sm-8" id="mem-used"></dd>
+					<dt class="col-sm-4">Available</dt>
+                    <dd class="col-sm-8" id="mem-avai"></dd>
+				  </dl>
+              </div>
+            </div>
+          </div>
+		  <div class="col-lg-4">
+            <div class="card card-primary card-outline">
+			  <div class="card-header">
+                <h5 class="card-title m-0">CPU Temperature</h5>
+              </div>
+              <div class="card-body">
+				  <div class="progress">
+					  <div class="progress-bar bg-primary progress-bar-striped" id="temp-progbar" role="progressbar"
+						   aria-valuemin="0" aria-valuemax="100" style="">
+					  </div>
+				  </div>
+				  <dl class="row">
+				    <dt class="col-sm-4">Warning</dt>
+                    <dd class="col-sm-8">50 °C</dd>
+					<dt class="col-sm-4">Threshold</dt>
+                    <dd class="col-sm-8" id="mem-used">70 °C</dd>
+				  </dl>
+              </div>
+            </div>
+          </div>
+		  <div class="col-lg-4">
+            <div class="card card-primary card-outline">
+			  <div class="card-header">
+                <h5 class="card-title m-0">Disk Usage</h5>
+              </div>
+              <div class="card-body">
+				  <div class="progress">
+					  <div class="progress-bar bg-primary progress-bar-striped" id="disk-usage-progbar" role="progressbar"
+						   aria-valuemin="0" aria-valuemax="100" style="">
+					  </div>
+				  </div>
+				  <dl class="row">
+				    <dt class="col-sm-4">Total Size</dt>
+                    <dd class="col-sm-8" id="disk-total"></dd>
+					<dt class="col-sm-4">Used</dt>
+                    <dd class="col-sm-8" id="disk-used"></dd>
+					<dt class="col-sm-4">Available</dt>
+                    <dd class="col-sm-8" id="disk-avai"></dd>
+				  </dl>
+              </div>
+            </div>
+          </div>
+		</div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
 
-    <!--  Scripts-->
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+    <div class="p-3">
+      <h5>Title</h5>
+      <p>Sidebar content</p>
+    </div>
+  </aside>
+  <!-- /.control-sidebar -->
 
-    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <script src="../static/js/rpi-status-monitor.js"></script>
-    <script src="../static/js/materialize.js"></script>
-<!--    <script src="../static/js/rpi-status-monitor.js"></script>-->
+  <!-- Main Footer -->
+  <footer class="main-footer">
+    <!-- To the right -->
+    <div class="float-right d-none d-sm-inline">
+      Anything you want
+    </div>
+    <!-- Default to the left -->
+    <strong>Copyright &copy; 2014-2020 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+  </footer>
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+
+<!-- jQuery -->
+<script src="{{url_for('static', filename='./js/jquery.min.js')}}"></script>
+<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="{{url_for('static', filename='./js/jquery.knob.min.js')}}"></script>
+<!-- Bootstrap 4 -->
+<script src="{{url_for('static', filename='./js/bootstrap.bundle.min.js')}}"></script>
+<!-- AdminLTE App -->
+<script src="{{url_for('static', filename='./js/adminlte.min.js')}}"></script>
+<script src="{{url_for('static', filename='./js/pi-status-system.app.js')}}"></script>
 
 </body>
-
 </html>

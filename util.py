@@ -32,9 +32,9 @@ def getMemoryUsage():
     response = execLinuxComs("free -m")
     result = response[1].split()
     return {
-        "total size": result[1],
-        "free": result[2],
-        "avail": result[6],
+        "total size": int(result[1]),
+        "used": int(result[2]),
+        "avail": int(result[6]),
         "use in %": round(float(result[2]) / float(result[1]) * 100, 2)
     }
 
@@ -43,7 +43,7 @@ def getUptime():
     total_mins = int(float(response.split()[0]) / 60)
     return {
         "days": int(total_mins / 24 / 60),
-        "hours": int(total_mins /60 % 24),
+        "hours": int(total_mins / 60 % 24),
         "minutes": total_mins % 60
     }
 
@@ -72,3 +72,72 @@ def getBasicInfo():
         "serialNum": response[-2].split(": ")[1].strip(),
         "modelNnum": response[-1].split(": ")[1].strip()
     }
+
+def getSensorsTemp():
+    response = execLinuxComs("sensors")
+    temp = response[2].split()[1]
+    if "+" in temp:
+        temp = temp.replace("+", "")
+    temp = float(temp.replace("°C", ""))
+    temp_f = (temp * (9 / 5)) + 32
+    return {
+        "temp_c": round(temp, 2),
+        "temp_f": round(temp_f, 2)
+    }
+
+def getCpuInfo():
+    response = execLinuxComs("lscpu")
+    result = [i.split(":") for i in response]
+    result = {i[0]: i[1].strip() for i in result}
+    return result
+
+def getSysInfo():
+    response = execLinuxCom("uname -a")
+    return response.strip()
+    
+def getMAC():
+    response = execLinuxCom("cat /sys/class/net/wlan0/address")
+    return response.strip()
+    
+def getDevicesOnWifi():
+    out = os.popen('ip -4 neigh').read().splitlines()
+    lst = []
+    for i, line in enumerate(out, start=1):
+        ip = line.split(' ')[0]
+        h = os.popen('host {}'.format(ip)).read()
+        hostname = h.split(' ')[-1]
+        lst.append(ip)
+    return lst
+    
+def getWifiName():
+    response = execLinuxCom("sudo iw dev wlan0 info | grep ssid | awk '{print $2}'")
+    return response.strip()
+    
+def getWifiPower():
+    response = execLinuxCom("iwconfig wlan0 | grep -i --color quality")
+    quality, signal = response.split("Signal")
+    quality_num = quality.split("=")[1].split("/")[0]
+    sign_num = signal.split("dBm")[0].split("=")[1].strip()
+    return {
+        "quality": quality_num,
+        "signal": sign_num
+    }
+
+def getLastLogin():
+    response = execLinuxCom("uptime --since")
+    return response.strip()
+
+def getLocation():
+    import urllib.request, json
+    from fake_useragent import UserAgent
+    ua = UserAgent()
+    response = execLinuxCom("wget -qO- http://ipecho.net/plain | xargs echo")
+    public_ip = response.strip()
+    url = "https://ipinfo.io/{}".format(public_ip)
+    req = urllib.request.Request(url, headers = {'User-Agent': ua.random})
+    r = urllib.request.urlopen(req).read()
+    cont = json.loads(r.decode('utf-8'))
+    return conts
+
+if __name__ == "__main__":
+    getWifiPower()
