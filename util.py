@@ -1,5 +1,14 @@
-import os
+import os, datetime
 
+def timing(f):
+    from time import time
+    def wrapper(*args, **kwargs):
+        start = time()
+        result = f(*args, **kwargs)
+        end = time()
+        print('{} Elapsed time: {} Secs'.format(f.__name__, round(end-start, 4)))
+        return result
+    return wrapper
 
 def execLinuxCom(command):
     response = os.popen(command).readline()
@@ -23,6 +32,8 @@ def getProcessInfo():
 def getIpAddress():
     response = execLinuxCom("hostname -I")
     result = response.split()
+    if len(result) == 1:
+        result.append("")
     return {
         "ipv4": result[0],
         "ipv6": result[1]
@@ -137,7 +148,43 @@ def getLocation():
     req = urllib.request.Request(url, headers = {'User-Agent': ua.random})
     r = urllib.request.urlopen(req).read()
     cont = json.loads(r.decode('utf-8'))
-    return conts
+    return cont
+	
+def getSpeedTest():
+    cmd = "curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python -"
+    response = execLinuxComs(cmd)
+    dl = [line for line in response if "Download" in line][0].strip()
+    ul = [line for line in response if "Upload" in line][0].strip()
+    return {
+	    "download": dl,
+	    "upload": ul
+	}
+
+def getLogFileList():
+    path = "/home/pi/flights_big_data/log"
+    files = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
+    all_logs = []
+    for file in files:
+        d = {}
+        d["name"] = file
+        full_path = "{}/{}".format(path, file)
+        d["date"] = modification_date(full_path)
+        d["size"] = round(os.path.getsize(full_path) / 1024, 3)
+        all_logs.append(d)
+    all_logs.sort(key=lambda d: datetime.datetime.strptime(d['date'], '%Y-%m-%d %H:%M:%S'), reverse=True)
+    return all_logs
+
+def modification_date(filename):
+    t = os.path.getmtime(filename)
+    return datetime.datetime.fromtimestamp(t).strftime('%Y-%m-%d %H:%M:%S')
+
+def convertDateTimeToUnix(dateTime):
+    return int(dateTime.timestamp())
+
+def get(d, keys):
+    if not keys or d is None:
+        return d
+    return get(d.get(keys[0]), keys[1:])
 
 if __name__ == "__main__":
-    getWifiPower()
+    getLogFileList()

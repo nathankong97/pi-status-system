@@ -2,6 +2,7 @@ from flask_restful import Resource
 from util import *
 from flask import Response
 import json, random
+from models import AirportSchedule
 
 
 
@@ -31,6 +32,16 @@ class LocationApi(Resource):
         #data = getLocation()
         #return Response(json.dumps(data), mimetype="application/json", status=200)
         pass
+		
+class SpeedTestApi(Resource):
+    def get(self):
+	    data = getSpeedTest()
+	    return Response(json.dumps(data), mimetype="application/json", status=200)
+
+class FlightScheduleApi(Resource):
+    def get(self, id, status_code):
+        data = AirportSchedule(id, status_code).getData()
+        return Response(json.dumps(data), mimetype="application/json", status=200)
 
 class TestApi(Resource):
     def get(self):

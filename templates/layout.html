@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% block head %}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <link rel="icon" 
+      type="image/png" 
+      href="{{url_for('static', filename='./images/pilogo.svg.png')}}">
+
+  <title>{% block title %}{% endblock %}</title>
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="{{url_for('static', filename='./fonts/fontawesome-free/css/all.min.css')}}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{{url_for('static', filename='./css/adminlte.min.css')}}">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <!-- App Css Edit Style -->
+  <link rel="stylesheet" href="{{url_for('static', filename='./css/app.css')}}">
+{% endblock %}
+</head>
+<body class="hold-transition layout-top-nav">
+<div class="wrapper">
+
+  <!-- Navbar -->
+  <nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
+    <div class="container">
+      <a href="/" class="navbar-brand">
+        <img src="{{url_for('static', filename='./images/pi.png')}}" alt="Raspberry=Pi Logo" class="brand-image img-circle elevation-2"
+             style="opacity: .8">
+        <span class="brand-text font-weight-light">Nathan & Yuqi Home System</span>
+      </a>
+      
+      <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse order-3" id="navbarCollapse">
+        <!-- Left navbar links -->
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a href="/" class="nav-link">Home</a>
+          </li>
+		  <li class="nav-item">
+            <a href="https://aoe2.net/#profile-76561198201007834" target="_blank" class="nav-link">AOE2:DE</a>
+          </li>
+		  <li class="nav-item">
+            <a id="pi-aware-address" target="_blank" class="nav-link">PiAware</a>
+          </li>
+		  <li class="nav-item">
+            <a href="https://flightaware.com/adsb/stats/user/fanykong" target="_blank" class="nav-link">ADS-B</a>
+          </li>
+		  <li class="nav-item">
+            <a href="/log" target="_blank" class="nav-link">Log</a>
+          </li>
+		  <li class="nav-item dropdown">
+            <a id="" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Nogizaka</a>
+            <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
+              <li><a href="https://www.bilibili.com/video/BV1t4411s7y2?from=search&seid=15431304324579055441" target="_blank" class="dropdown-item">乃木坂在哪</a></li>
+              <li><a href="https://www.bilibili.com/video/BV11s411w7at/?spm_id_from=333.788.videocard.0" target="_blank" class="dropdown-item">乃木坂工事中</a></li>
+			  <li><a href="https://www.bilibili.com/video/av55997533/?spm_id_from=333.788.b_636f6d6d656e74.15" target="_blank" class="dropdown-item">NogiBINGO </a></li>
+        <li><a href="https://space.bilibili.com/2301165/channel/detail?cid=20083" target="_blank" class="dropdown-item">乃木坂工事中 (EP14-118)</a></li>
+			  <li><a href="https://space.bilibili.com/19553445/channel/detail?cid=80622" target="_blank" class="dropdown-item">乃木坂工事中 (EP183-)</a></li>
+      </ul>
+        </li>
+      <li class="nav-item">
+        <a href="/search" target="_blank" class="nav-link">Flight Tracker</a>
+      </li>
+          <li class="nav-item dropdown">
+            <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">More</a>
+            <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
+              <li><a href="#" class="dropdown-item">Some action </a></li>
+              <li><a href="#" class="dropdown-item">Some other action</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <!-- /.navbar -->
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container">
+        <div class="row mb-2">
+          <div class="col-sm-8">
+		    <div class="row">
+              <h1 class="m-0 text-dark"> {% block subtitle %}{% endblock %} </h1>&nbsp;&nbsp;&nbsp;&nbsp;
+			  <div id="currentTime" style="text-align:justify"></div>
+			</div>
+			<div></div>
+          </div><!-- /.col -->
+          <div class="col-sm-4">
+            <ol class="breadcrumb float-sm-right">
+			  {% block tree %}
+              <li class="breadcrumb-item"><a href="/">Home</a></li>
+			  {% endblock %}
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <div class="content">
+      <div class="container">
+        {% block body %}{% endblock %}
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+    <div class="p-3">
+      <h5>Title</h5>
+      <p>Sidebar content</p>
+    </div>
+  </aside>
+  <!-- /.control-sidebar -->
+
+  <!-- Main Footer -->
+  <footer class="main-footer">
+    <!-- To the right -->
+    <div class="float-right d-none d-sm-inline">
+      Anything you want
+    </div>
+    <!-- Default to the left -->
+    <strong>Copyright &copy; 2014-2020 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+  </footer>
+</div>
+<!-- ./wrapper -->
+
+{% block javascript %}
+{% endblock %}
+</body>
+</html>

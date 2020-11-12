@@ -7,8 +7,13 @@ var loc_url = "api/v1/location";
 var myStatusDev = setInterval(updateStatus, 2000)
 var myTime = setInterval(myTimer, 1000);
 var myLocation;
+fetchPiAwareAddress();
 
 
+
+function fetchPiAwareAddress() {
+	document.getElementById('pi-aware-address').href= "http://" + window.location.hostname + ":8080";
+}
 
 function myTimer() {
   var d = new Date();
