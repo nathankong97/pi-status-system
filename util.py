@@ -1,4 +1,6 @@
 import os, datetime
+from math import radians, cos, sin, asin, sqrt
+from decimal import Decimal
 
 def timing(f):
     from time import time
@@ -186,5 +188,49 @@ def get(d, keys):
         return d
     return get(d.get(keys[0]), keys[1:])
 
+def pprint(d, indent=0):
+   for key, value in d.items():
+      print('\t' * indent + str(key))
+      if isinstance(value, dict):
+         pprint(value, indent+1)
+      else:
+         print('\t' * (indent+1) + str(value))
+
+def calculateDistance(lon1, lat1, lon2, lat2):
+    """
+    Calculate the great circle distance between two points
+    on the earth (specified in decimal degrees) (In KM)
+    """
+    # 将十进制度数转化为弧度
+    lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+
+    # haversine公式
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+    a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
+    c = 2 * asin(sqrt(a))
+    r = 6371  # 地球平均半径，单位为公里
+    return int(round(c * r, 2))
+
+def remove_duplicate_nested_list(nested_list):
+    return list(set(tuple(sorted(sub)) for sub in nested_list))
+
+def convertTimeStampToUnix(dateTime):
+    return int(dateTime.timestamp())
+
+def convertUnixToTimeStamp(unixtime, tz, dst):
+    if unixtime is None:
+        return "-"
+    if dst:
+        return (datetime.datetime.utcfromtimestamp(unixtime) + datetime.timedelta(hours=float(tz) + 1)).strftime('%m/%d %H:%M')
+    else:
+        return (datetime.datetime.utcfromtimestamp(unixtime) + datetime.timedelta(hours=float(tz))).strftime('%m/%d %H:%M')
+
+def convertSecondToHour(seconds):
+    hour,min,sec = str(datetime.timedelta(seconds=seconds)).split(":")
+    return "{0}h {1}min".format(hour,min)
+
 if __name__ == "__main__":
-    getLogFileList()
+    #from api.api import *
+    #FlightScheduleApi().get("IND", 1)
+    pass

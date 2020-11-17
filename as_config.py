@@ -55,13 +55,16 @@ class AirportSchedule_Config:
         "Western Global Airlines",
         "Antonov Airlines (Antonov Design Bureau)",
         "National Airlines",
-        "ABX Air"
+        "ABX Air",
+        "Amerijet International",
+        "Jet Logistics"
     ]
 
-    cargoAircraftList = []
-
-    cargoAircraftList += [
+    cargoAircraftList = [
         "33F",
         "77F",
-        "B741"
+        "B741",
+        "B77F",
+        "74Y",
+        "74N"
     ]

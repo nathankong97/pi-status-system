@@ -1,0 +1,304 @@
+{% extends "layout.html" %}
+
+{% block head %}
+{{ super() }}
+
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<!-- DataTables -->
+<link rel="stylesheet"
+    href="{{ url_for('static', filename='./plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+<link rel="stylesheet"
+    href="{{ url_for('static', filename='./plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+<!-- jVectorMap -->
+<link rel="stylesheet" href="{{ url_for('static', filename='./js/vectorMap/jquery-jvectormap-2.0.5.css') }}"
+    type="text/css" media="screen" />
+<script src="{{ url_for('static', filename='./js/vectorMap/jquery.js') }}"></script>
+<script src="{{ url_for('static', filename='./js/vectorMap/jquery-jvectormap-2.0.5.min.js') }}"></script>
+<script src="{{ url_for('static', filename='./js/vectorMap/jquery-jvectormap-world-mill.js') }}"></script>
+{% endblock %}
+
+{% block title %}Airport Dashboard{% endblock %}
+
+{% block subtitle %}<div id="airportName"></div>{% endblock %}
+
+{% block tree %}
+{{ super() }}
+<li class="breadcrumb-item"><a href="/search">Flight Tracker</a></li>
+<li class="breadcrumb-item">Dashboard</li>
+{% endblock %}
+
+{% block body %}
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-8">
+                    <h1 class="m-0 text-dark">
+                        <div id="airportName"></div>
+                    </h1>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+            <div class="row mb-2">
+                <div class="col-lg-12">
+                    <div>
+                        <span id="airportCode"></span>
+                        &nbsp&nbsp&nbsp
+                        <span id="airportCity"></span>,
+                        <span id="airportCountry"></span>&nbsp
+                        <img src="{{ url_for('static', filename='./images/nationFlag/' + countryCode + '.png') }}"
+                            width="22" height="15" style="vertical-align:middle">&nbsp&nbsp&nbsp
+                        <a id="googleMapUrl" href="#" target="_blank" title="Search it through Google Map"><i
+                                class="fas fa-map-marker-alt"></i></a>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <div class="card card-outline card-primary">
+                        <div class="card-header">
+                            <h4 class="card-title">On-Time Rate</h4>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                                        class="fas fa-minus"></i>
+                                </button>
+                            </div>
+                            <!-- /.card-tools -->
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <h3><strong><span id="ontimerate"></span></strong></h3>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <div class="col">
+                    <div class="card card-outline card-primary">
+                        <div class="card-header">
+                            <h4 class="card-title">Cancellation Flights</h4>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                                        class="fas fa-minus"></i>
+                                </button>
+                            </div>
+                            <!-- /.card-tools -->
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <h3><strong><span id="cancelFlights"></span></strong></h3>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <div class="col">
+                    <div class="card card-outline card-primary">
+                        <div class="card-header">
+                            <h4 class="card-title">International</h4>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                                        class="fas fa-minus"></i>
+                                </button>
+                            </div>
+                            <!-- /.card-tools -->
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <h3><strong><span id="internationalFlights"></span></strong></h3>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <div class="col">
+                    <div class="card card-outline card-primary">
+                        <div class="card-header">
+                            <h4 class="card-title">Total Flights</h4>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                                        class="fas fa-minus"></i>
+                                </button>
+                            </div>
+                            <!-- /.card-tools -->
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <h3><strong><span id="totalFlights"></span></strong></h3>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <div class="col">
+                    <div class="card card-outline card-primary">
+                        <div class="card-header">
+                            <h4 class="card-title">Estimate Passenger</h4>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                                        class="fas fa-minus"></i>
+                                </button>
+                            </div>
+                            <!-- /.card-tools -->
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <h3><strong><span id="passengerTraffic"></span></strong></h3>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+            <!-- /.First Row card -->
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card card-primary card-outline">
+                        <div class="card-header">
+                            <h3 class="card-title">Top 5 Far Destination</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body table-responsive p-0">
+                            <table class="table table-hover text-nowrap table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>City</th>
+                                        <th>Country</th>
+                                        <th>Name</th>
+                                        <th>Distance (km)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="destinationTable">
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card card-outline card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">METARs Data &nbsp&nbsp
+                                <a id="darkSkyWeather" href="" target="_blank" title="More Weather Details in DarkSky">
+                                    <i class="fas fa-temperature-high"></i>
+                                </a>
+                            </h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                                        class="fas fa-minus"></i>
+                                </button>
+                            </div>
+                            <!-- /.card-tools -->
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <h6><span id="airportWeather"></span></h6>
+                            <div class="modal fade" id="weatherModal" tabindex="-1" role="dialog"
+                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Weather Detail</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <span id="weatherDetail"></span>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                </div>
+            </div>
+            <!-- /.Second Row table -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title m-0">Destination Map</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="worldMap" style="width: 1080px; height: 350px"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Flight Information Display System</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <table id="flightTable" class="table table-bordered table-hover display compact">
+                                <thead>
+                                    <tr>
+                                        <th>STD</th>
+                                        <th>ETD</th>
+                                        <th>Flight</th>
+                                        <th>Destination</th>
+                                        <th>Airline</th>
+                                        <th>Terminal</th>
+                                        <th>Gate</th>
+                                        <th>Aircraft</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>STD</th>
+                                        <th>ETD</th>
+                                        <th>Flight</th>
+                                        <th>Destination</th>
+                                        <th>Airline</th>
+                                        <th>Terminal</th>
+                                        <th>Gate</th>
+                                        <th>Aircraft</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content -->
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<!-- Bootstrap 4 -->
+<script src="{{ url_for('static', filename='./plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<!-- AdminLTE App -->
+<script src="{{ url_for('static', filename='./dist/js/adminlte.min.js') }}"></script>
+<!-- DataTables -->
+<script src="{{ url_for('static', filename='./plugins/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ url_for('static', filename='./plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+<script
+    src="{{ url_for('static', filename='./plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+<script
+    src="{{ url_for('static', filename='./plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+<!-- Main Logic Data -->
+<script src="{{ url_for('static', filename='./js/flightSchedule.app.js') }}"></script>
+<script src="{{ url_for('static', filename='./js/currentFlight.app.js') }}"></script>
+<script src="{{ url_for('static', filename='./js/airportInfo.app.js') }}"></script>
+{% endblock %}
