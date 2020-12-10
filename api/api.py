@@ -165,6 +165,15 @@ class FlightScheduleApi(Resource):
         #return data, 200
         return Response(simplejson.dumps(data), mimetype="application/json", status=200)
 
+class AirportWeatherApi(Resource):
+    def get(self, id):
+        proxy = Proxy().ip_proxies
+        data = AirportSchedule(id, 0, proxy=proxy).getAirportWeather()
+        if data:
+            return Response(simplejson.dumps(data), mimetype="application/json", status=200)
+        else:
+            return {"metar": "Not Found"}, 404
+
 class CurrentFlightApi(Resource):
     def get(self, id, status_code):
         proxy = Proxy().ip_proxies

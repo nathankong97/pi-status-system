@@ -33,6 +33,12 @@ class Airline:
                 self.name = row[0]
                 self.iata = row[1]
                 self.status = True
+    
+    @staticmethod
+    def commercial_airlines():
+        query = "SELECT IATA FROM COMMERCIAL;"
+        rows = db().fetchall(query)
+        return [row[0] for row in rows]
 
 
 class Airport:
@@ -146,4 +152,5 @@ class Aircraft:
             self.Seats = row[4]
             self.status = True
 
-
+if __name__ == "__main__":
+    print(Airline.commercial_airlines())

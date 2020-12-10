@@ -13,7 +13,6 @@ fetch(url)
     })
     .then((data) => {
         console.log(data);
-        prepareFlightTable(data.flights);
         document.getElementById("totalFlights").innerHTML = data.totalFlights - data.canceledCounts;
         document.getElementById("internationalFlights").innerHTML = data.internationalDomestic.international;
         document.getElementById("passengerTraffic").innerHTML = data.passengerTraffic;
@@ -49,7 +48,7 @@ function farthestDestination(data) { //this is for inside of the table/body
 function onTimeRate(data) {
     if (data >= 80) {
         document.getElementById("ontimerate").innerHTML = String(data) + " <small>%</small>";
-    } else if (data < 80 && data >= 60) {
+    } else if (data < 80 && data >= 60) { 
         document.getElementById("ontimerate").innerHTML = "<font color='#ffcc00'>" + String(data) + " <small>%</small></font>";
     } else {
         document.getElementById("ontimerate").innerHTML = "<font color='#f32013'>" + String(data) + " <small>%</small></font>";

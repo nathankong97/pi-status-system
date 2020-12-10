@@ -5,7 +5,8 @@ class AirportSchedule_Config:
         "5X",
         "8K",
         "9K",
-        "HT"
+        "HT",
+        "5Y"
     ]
 
     cargoNameList = [
@@ -57,7 +58,9 @@ class AirportSchedule_Config:
         "National Airlines",
         "ABX Air",
         "Amerijet International",
-        "Jet Logistics"
+        "Jet Logistics",
+        "ANA Cargo",
+        "Atlas Air"
     ]
 
     cargoAircraftList = [
@@ -67,4 +70,23 @@ class AirportSchedule_Config:
         "B77F",
         "74Y",
         "74N"
+    ]
+
+    businessICAOList = [
+        "GLO",
+        "ENY",
+        "GJS"
+    ]
+
+    businessIATAList = [
+        "EV",
+        "YV",
+        "YX",
+        "MQ",
+        "OO",
+        "OH",
+        "CP",
+        "QX",
+        "AX",
+        "PT"
     ]

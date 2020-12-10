@@ -233,4 +233,4 @@ def convertSecondToHour(seconds):
 if __name__ == "__main__":
     #from api.api import *
     #FlightScheduleApi().get("IND", 1)
-    pass
+    print(getLogFileList())

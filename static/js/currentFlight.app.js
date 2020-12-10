@@ -10,29 +10,25 @@ fetch(url)
         return response.json();
     })
     .then((data) => {
-        prepareFlightTable(data.flights);
+        $('#flightTable').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "responsive": true,
+            "bDestroy": true,
+            "data": data.flights,
+            "columns": [
+                { "data": "sched_dep" },
+                { "data": "status_detail" },
+                { "data": "flight_num" },
+                { "data": "dest_city" },    
+                { "data": "airline" },
+                { "data": "origin_terminal" },
+                { "data": "origin_gate" },
+                { "data": "aircraft_text" }
+            ]
+        });
     });
-
-
-function prepareFlightTable(data) {
-    $('#flightTable').DataTable({
-        "paging": true,
-        "lengthChange": true,
-        "searching": true,
-        "ordering": true,
-        "info": true,
-        "autoWidth": false,
-        "responsive": true,
-        "data": data,
-        "columns": [
-            { "data": "sched_dep" },
-            { "data": "status_detail" },
-            { "data": "flight_num" },
-            { "data": "dest_city" },    
-            { "data": "airline" },
-            { "data": "origin_terminal" },
-            { "data": "origin_gate" },
-            { "data": "aircraft_text" }
-        ]
-    });
-}

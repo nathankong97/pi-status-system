@@ -15,7 +15,7 @@ class AirportSchedule(AirportSchedule_Config, AirportSchedule_Helpers):
         }
         self.url = "https://api.flightradar24.com/common/v1/airport.json"
         self.start_time, self.end_time = self.getStartEndTime()
-        self.params = {
+        self.params = { 
             "code": self.code,
             "plugin-setting[schedule][timestamp]": self.start_time if self.start_time else None,
             "page": 1,
@@ -107,6 +107,24 @@ class AirportSchedule(AirportSchedule_Config, AirportSchedule_Helpers):
         [data[i].update({"sched_dep": util.convertUnixToTimeStamp(data[i]["sched_dep"], tz, dst)}) for i in range(len(data))]
         return {"flights": data}
         
+    @util.timing
+    def getAirportWeather(self):
+        local_param = self.params
+        local_param["plugin-setting[schedule][timestamp]"] = None
+        local_param["limits"] = 1
+        local_param["plugin-setting[schedule][mode]"] = None
+        local_param["plugin[]"] = None
+        attempt = 1
+        while attempt < 5:
+            try:
+                proxy = {"http": random.choice(self.proxy)} if self.proxy else None
+                #return requests.get(self.url, params=local_param, timeout=15, proxies=proxy, headers=self.header).json()
+                return requests.get(self.url, params=local_param, timeout=15, proxies=proxy, headers=self.header).json()["result"]["response"]["airport"]["pluginData"]["weather"]
+            except:
+                attempt += 1
+        return
+        
+
     def checkBeforeEndTime(self, flight):
         return flight["flight"]["time"]["scheduled"]["departure"] <= self.end_time
 
@@ -219,9 +237,12 @@ class Flight:
         return self.__dict__
 
 if __name__ == "__main__":
-    AS = AirportSchedule("PHL", 0)
-    data = AS.getData()["flights"][15]
-    util.pprint(data)
+    from proxy import Proxy
+    proxy = Proxy().ip_proxies
+    AS = AirportSchedule("PHL", 0, proxy=proxy)
+    data = AS.getAirportWeather()
+    print(data)
+    #util.pprint(data)
     # f = Flight(data)
     print("---------")
     # util.pprint(f.dictionary())
