@@ -1,4 +1,6 @@
 from db import db
+import itertools
+import util
 
 class Airline:
     def __init__(self, IATA="", ICAO=""):
@@ -11,14 +13,14 @@ class Airline:
 
     def fetch(self):
         if self.iata != "" and self.icao != "":
-            query = "select Name from Airline where IATA = '{0}' AND ICAO = '{1}'".format(
+            query = "select Name from airline where IATA = '{0}' AND ICAO = '{1}'".format(
                 self.iata, self.icao)
             row = db().fetch(query)
             if row:
                 self.name = row[0]
                 self.status = True
         elif self.iata != "" and self.icao == "":
-            query = "select Name, ICAO from Airline where IATA = '{0}'".format(
+            query = "select Name, ICAO from airline where IATA = '{0}'".format(
                 self.iata)
             row = db().fetch(query)
             if row:
@@ -26,7 +28,7 @@ class Airline:
                 self.icao = row[1]
                 self.status = True
         elif self.iata == "" and self.icao != "":
-            query = "select Name, IATA from Airline where ICAO = '{0}'".format(
+            query = "select Name, IATA from airline where ICAO = '{0}'".format(
                 self.icao)
             row = db().fetch(query)
             if row:
@@ -57,7 +59,7 @@ class Airport:
         self.fetchByCode(IATA)
 
     def fetchByCode(self, IATA):
-        query = "SELECT Name, City, Country, ICAO, Latitude, Longitude, Altitude, TimezoneType, Timezone FROM Airport WHERE IATA = %s"
+        query = "SELECT Name, City, Country, ICAO, Latitude, Longitude, Altitude, TimezoneType, Timezone FROM airport WHERE IATA = %s"
         #row = db().fetch(query)
         A = (IATA,)
         connection = db().connection
@@ -78,7 +80,7 @@ class Airport:
 
     @staticmethod
     def read():
-        query = "select Name, City, Country, IATA, ICAO, Latitude, Longitude, Altitude, TimezoneType, Timezone from Airport"
+        query = "select Name, City, Country, IATA, ICAO, Latitude, Longitude, Altitude, TimezoneType, Timezone from airport"
         rows = db().fetchall(query)
         data = {"airports": []}
         for row in rows:
@@ -111,14 +113,14 @@ class Country:
 
     def fetchByName(self):
         if self.name:
-            query = "select ISO2 from Country where Name = '{0}'".format(
+            query = "select ISO2 from country where Name = '{0}'".format(
                 self.name)
             row = db().fetch(query)
             self.code = row[0]
 
     def fetch(self, code):
         if code:
-            query = "select Name from Country where ISO2 = '{0}'".format(code)
+            query = "select Name from country where ISO2 = '{0}'".format(code)
             row = db().fetch(query)
             if row:
                 self.name = row[0]
@@ -135,9 +137,9 @@ class Aircraft:
 
     def fetch(self, value=""):
         if len(value) == 3:
-            query = """SELECT ICAO, Model, Type, Size, Seats FROM Aircraft WHERE IATA = '{0}'""".format(value)
+            query = """SELECT ICAO, Model, Type, Size, Seats FROM aircraft WHERE IATA = '{0}'""".format(value)
         elif len(value) == 4:
-            query = """SELECT IATA, Model, Type, Size, Seats FROM Aircraft WHERE ICAO = '{0}'""".format(value)
+            query = """SELECT IATA, Model, Type, Size, Seats FROM aircraft WHERE ICAO = '{0}'""".format(value)
         else:
             return None
         row = db().fetch(query)
@@ -152,5 +154,31 @@ class Aircraft:
             self.Seats = row[4]
             self.status = True
 
+class Cars:
+    def __init__(self, model, zipcode):
+        self.model = model
+        self.zipcode = zipcode
+
+    def fetchall(self):
+        d = db()
+        query = d.CARS_FULL_INFO_QUERY.format(self.model, self.zipcode, self.model, self.zipcode)
+        #query = d.CARS_FULL_INFO_VIEW_QUERY.format(self.model, self.zipcode)
+        data = d.fetchall(query, show_columns=True)
+        columns, rows = data["columns"], data["data"]
+        result = [{columns[i]: detail for i, detail in enumerate(car)} for car in rows]
+        return result
+
+    @staticmethod
+    def import_view():
+        d = db()
+        brand_list = util.get_brand_list()
+        brands = [brand_list[i] for i in ["Toyota", "Honda", "BMW", "Ford", "Acura", "Hyundai"]]
+        zipcodes = ["46204", "19406", "60611"]
+        brands_zipcodes = list(itertools.product(brands, zipcodes))[1:]
+        for brand, zipcode in brands_zipcodes:
+            query = d.CREATE_ALL_CARS_INFO_VIEW_QUERY.format(brand, zipcode, brand, zipcode, brand, zipcode)
+            d.execute(query)
+            print("{} {} success".format(brand,zipcode))
+
 if __name__ == "__main__":
-    print(Airline.commercial_airlines())
+    Cars.import_view()

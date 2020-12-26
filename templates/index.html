@@ -110,28 +110,38 @@
       </div>
     </div>
 <div class="row">
-  <div class="col-lg-4">
+    <div class="col-lg-4">
         <div class="card card-primary card-outline">
-    <div class="card-header">
-            <h5 class="card-title m-0">Memory Usage</h5>
-          </div>
-          <div class="card-body">
-      <div class="progress">
-        <div class="progress-bar bg-primary progress-bar-striped" id="memory-usage-progbar" role="progressbar"
-           aria-valuemin="0" aria-valuemax="100" style="">
+            <div class="card-header">
+                <h5 class="card-title m-0">Cars Information Search</h5>
+            </div>
+            <div class="card-body">
+                <form action="/car_search_result" method="GET">
+                    <div class="input-group">
+                        <label for="model">Model</label>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                        <select id="model" name="model" class="form-control">
+                            <option disabled selected value> -- select an option -- </option>
+                            <option value="20088">Toyota</option>
+                            <option value="20017">Honda</option>
+                            <option value="20005">BMW</option>
+                        </select>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <label for="zipcode">Location</label>&nbsp&nbsp
+                        <select id="zipcode" name="zipcode" class="form-control">
+                            <option disabled selected value> -- select an option -- </option>
+                            <option value="46204">Indianapolis</option>
+                            <option value="60611">Chicago</option>
+                            <option value="19406">King of Prussia</option>
+                        </select>
+                    </div>
+                    <br>
+                    <button type="submit" class="btn btn-outline-primary btn-sm">Search</button>
+                </form>
+            </div>
         </div>
-      </div>
-      <dl class="row">
-        <dt class="col-sm-4">Total</dt>
-                <dd class="col-sm-8" id="mem-total"></dd>
-      <dt class="col-sm-4">Used</dt>
-                <dd class="col-sm-8" id="mem-used"></dd>
-      <dt class="col-sm-4">Available</dt>
-                <dd class="col-sm-8" id="mem-avai"></dd>
-      </dl>
-          </div>
-        </div>
-      </div>
+    </div>
   <div class="col-lg-4">
         <div class="card card-primary card-outline">
     <div class="card-header">
@@ -147,7 +157,7 @@
         <dt class="col-sm-4">Warning</dt>
                 <dd class="col-sm-8">50 °C</dd>
       <dt class="col-sm-4">Threshold</dt>
-                <dd class="col-sm-8" id="mem-used">70 °C</dd>
+                <dd class="col-sm-8">70 °C</dd>
       </dl>
           </div>
         </div>
@@ -174,8 +184,7 @@
           </div>
         </div>
       </div>
-  </div>
-</div><!-- /.container-fluid -->
+  </div><!-- /.container-fluid -->
 {% endblock %}
 
 {% block javascript %}

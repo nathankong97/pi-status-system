@@ -9,3 +9,5 @@ def initialize_routes(api):
     api.add_resource(AirportApi, '/api/v1/airport/<id>')
     api.add_resource(CurrentFlightApi, '/api/v1/currentFlight/<id>/<status_code>')
     api.add_resource(AirportWeatherApi, '/api/v1/weather/<id>')
+    api.add_resource(FlightDatesCountApi, '/api/v1/flightDateCount')
+    api.add_resource(CarsInfoApi, '/api/v1/carsInfo/<model>/<zipcode>')

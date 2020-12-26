@@ -4,9 +4,9 @@ from flask import Response
 import json, simplejson
 import random
 from models import AirportSchedule
-from db_models import Airport, Airline, Country, Aircraft
+from db_models import Airport, Airline, Country, Aircraft, Cars
 from proxy import Proxy
-
+from db import db
 
 class RpiStatusApi(Resource):
     def get(self):
@@ -212,6 +212,21 @@ class AirportApi(Resource):
         else:
             return {"error": "Please select a correct airport IATA Code!"}, 404
 
+class FlightDatesCountApi(Resource):
+    def get(self):
+        d = db()
+        data = d.fetchall(d.COUNT_BY_DAY_QUERY)
+        json_data = {
+            "count": [i[0] for i in data],
+            "label": [i[1].strftime('%Y-%m-%d') for i in data]
+        }
+        return Response(simplejson.dumps(json_data), mimetype="application/json", status=200)
+
+class CarsInfoApi(Resource):
+    def get(self, model, zipcode):
+        print(model, zipcode)
+        result = Cars(model, zipcode).fetchall()
+        return Response(simplejson.dumps(result), mimetype="application/json", status=200)
 
 if __name__ == "__main__":
-    FlightScheduleApi().get("IND", 1)
+    CarsInfoApi("20017","46204")

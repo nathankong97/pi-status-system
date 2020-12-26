@@ -1,6 +1,6 @@
 import os, datetime
 from math import radians, cos, sin, asin, sqrt
-from decimal import Decimal
+import json
 
 def timing(f):
     from time import time
@@ -163,7 +163,7 @@ def getSpeedTest():
 	}
 
 def getLogFileList():
-    path = "/home/pi/flights_big_data/log"
+    path = "/home/pi/flights-big-data/log"
     files = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
     all_logs = []
     for file in files:
@@ -229,6 +229,11 @@ def convertUnixToTimeStamp(unixtime, tz, dst):
 def convertSecondToHour(seconds):
     hour,min,sec = str(datetime.timedelta(seconds=seconds)).split(":")
     return "{0}h {1}min".format(hour,min)
+
+def get_brand_list():
+    with open("data/makes.json") as f:
+        data = json.load(f)
+        return data
 
 if __name__ == "__main__":
     #from api.api import *
