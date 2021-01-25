@@ -1,0 +1,231 @@
+{% extends "layout.html" %}
+
+{% block head %}
+{{ super() }}
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+{% endblock %}
+
+{% block title %}Pi-System: Airport Detail{% endblock %}
+
+{% block subtitle %} Airport Detail Information {% endblock %}
+
+{% block tree %}
+{{ super() }}
+<li class="breadcrumb-item">Airport Detail</li>
+{% endblock %}
+
+{% block body %}
+<div class="card card-solid">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12 col-sm-6">
+                <div class="col-12">
+                    <img id="airport-img" src="" class="product-image" alt="Airport Image" style="border-radius: 5px; border: 1px solid black;">
+                </div>
+                <br>
+                <div class="col-12">
+                    <iframe id="airport-map" width="100%" height="200" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
+                            src="" style="border-radius: 5px; border: 1px solid black;">
+                    </iframe>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6">
+                <h3 class="my-3" id="airport-name"></h3>
+                <p class="text-muted" id="airport-location"></p>
+                <dl class="row">
+                    <dt class="col-sm-6">Longitude</dt>
+                    <dd class="col-sm-6" id="lng"></dd>
+                    <dt class="col-sm-6">Latitude</dt>
+                    <dd class="col-sm-6" id="lat"></dd>
+                    <dt class="col-sm-6">Elevation</dt>
+                    <dd class="col-sm-6" id="elv"></dd>
+                    {% if total_dest > 1 %}
+                    <dt class="col-sm-6">Total Destinations</dt>
+                    <dd class="col-sm-6">{{ total_dest }}</dd>
+                    <dt class="col-sm-6">On-Time Departure Rate</dt>
+                    <dd class="col-sm-6">{{ (ontime_rate[0][0] / ontime_rate[1][0] * 100)|round(2) }} %</dd>
+                    <dt class="col-sm-6">On-Time Arrival Rate</dt>
+                    <dd class="col-sm-6">{{ (ontime_arr[0][0] / ontime_arr[1][0] * 100)|round(2) }} %</dd>
+                    {% endif %}
+                    <dt class="col-sm-6">Avg Delay Departure</dt>
+                    {% if arr != None %}
+                    <dd class="col-sm-6">{{ dep }} min</dd>
+                    {% else %}
+                    <dd class="col-sm-6"></dd>
+                    {% endif %}
+                    <dt class="col-sm-6">Avg Delay Arrival</dt>
+                    {% if arr != None %}
+                    {% if arr < 0 %}
+                    {% set arr = arr * -1 %}
+                    <dd class="col-sm-6">{{ arr }} min (Early)</dd>
+                    {% else %}
+                    <dd class="col-sm-6">{{ arr }} min</dd>
+                    {% endif %}
+                    {% endif %}
+                </dl>
+                <hr>
+                <p><b>All Runway Information</b></p>
+                <div id="runways"></div>
+                <hr>
+                <p><a href="" id="main-site" target="_blank">Click Here to Visit Main Website</a></p>
+                <p><a href="" id="wiki-site" target="_blank">Click Here to Visit Wiki Page</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-lg-12 col-md-12 col-sm12">
+    <div class="card">
+        <div class="card-header">
+	        <h3 class="card-title">Top 10 Popular Destinations</h3>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover text-nowrap table-sm table-bordered table-striped">
+                <thead>
+                  <tr>
+                      <th>Name</th>
+                      <th>City</th>
+                      <th>Count (in Total)</th>
+                      <th>Carriers</th>
+                  </tr>
+                </thead>
+                <tbody id="pop-destination-table">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-12 col-md-12 col-sm12">
+    <div class="card">
+        <div class="card-header">
+	        <h3 class="card-title">Top 5 Airlines</h3>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover text-nowrap table-sm table-bordered table-striped">
+                <thead>
+                  <tr>
+                      <th>Name</th>
+                      <th>Count (in Total)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for dictionary in pop_airlines %}
+                  <tr>
+                      <td>{{ dictionary.name }} &nbsp&nbsp&nbsp<img src="{{ dictionary.url }}"></td>
+                      <td>{{ dictionary.count }}</td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-5 col-md-12 col-sm12">
+        <div class="card">
+            <div class="card-header">
+	            <h3 class="card-title">Airline Alliance Ratio</h3>
+            </div>
+            <div class="card-body">
+                <canvas id="allianceChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-7 col-md-12 col-sm12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Top 10 Popular Aircrafts</h3>
+            </div>
+            <div class="card-body">
+            <table class="table table-hover text-nowrap table-sm table-bordered table-striped">
+                <thead>
+                  <tr>
+                      <th>Name</th>
+                      <th>Count (in Total)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for dictionary in pop_aircraft %}
+                  <tr>
+                      <td>{{ dictionary.name }}</td>
+                      <td>{{ dictionary.count }}</td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Flight Paths Map</h3>
+            </div>
+            <div class="card-body">
+                <div id="flight-path"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Flight Time Series</h3>
+            </div>
+            <div class="card-body">
+                <div id="flight-time-chart"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+<script src="{{ url_for('static', filename='./js/airportDetail.app.js') }}"></script>
+<script src="{{ url_for('static', filename='./js/airportFlightPath.app.js') }}"></script>
+<script src="{{ url_for('static', filename='./js/airportPopDest.app.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+<script>
+    var params = new URLSearchParams(window.location.search);
+    var airport = String(params.get('airport-input'));
+    var url = "/api/v1/alliance/" + airport;
+    fetch(url)
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            var ctx = document.getElementById("allianceChart");
+            var myChart = new Chart(ctx, {
+              type: 'doughnut',
+              data: {
+                labels: data.name,
+                datasets: [
+                  {
+                    data: data.data,
+                    label: "Airline Alliance",
+                    backgroundColor: ["red", "blue", "green", "black"]
+                  }
+                ]
+              },
+                options: {
+                    responsive: true,
+                    legend: {
+                        position: "right",
+                        align: "middle"
+                    }
+                }
+            });
+        })
+</script>
+<script src="{{ url_for('static', filename='./js/airportTimeSeries.app.js') }}"></script>
+{% endblock %}

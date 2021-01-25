@@ -62,7 +62,7 @@
   </div>
 </div>
     <div class="row">
-      <div class="col-lg-4">
+      <div class="col-lg-3">
         <div class="card card-primary card-outline">
     <div class="card-header">
             <h5 class="card-title m-0">Memory Usage</h5>
@@ -84,7 +84,23 @@
           </div>
         </div>
       </div>
-  <div class="col-lg-8">
+        <div class="col-lg-3">
+            <div class="card card-primary card-outline">
+                <div class="card-header">
+                    <h5 class="card-title m-0">Airport Lookup</h5>
+                </div>
+                <div class="card-body">
+                    <form name="airport-form" action="/airport_detail" method="GET" onsubmit="return validateForm()">
+                        <div class="form-group">
+                          <input name="airport-input" type="text" class="form-control" style="text-transform:uppercase"
+                                 placeholder="IATA Code: (LAX, ORD)">
+                        </div>
+                        <button type="submit" class="btn btn-outline-primary btn-sm">Search</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+  <div class="col-lg-6">
         <div class="card card-primary card-outline">
     <div class="card-header">
             <h5 class="card-title m-0">Processor Status</h5>
@@ -197,4 +213,13 @@
 <!-- AdminLTE App -->
 <script src="{{url_for('static', filename='./js/adminlte.min.js')}}"></script>
 <script src="{{url_for('static', filename='./js/pi-status-system.app.js')}}"></script>
+<script>
+    function validateForm() {
+  var x = document.forms["airport-form"]["airport-input"].value;
+  if (x === "") {
+    alert("Airport Code must be filled out");
+    return false;
+  }
+}
+</script>
 {% endblock %}

@@ -53,6 +53,15 @@ class AirportSchedule(AirportSchedule_Config, AirportSchedule_Helpers):
     def __getListOfParams(self):
         return [dict(self.params, page=i) for i in range(1, 16)]
 
+    def getDetails(self):
+        proxy = {"http": random.choice(self.proxy)} if self.proxy else None
+        url = "https://api.flightradar24.com/common/v1/airport.json?code={}&plugin[]=details&plugin[]=runways".format(self.code)
+        r = requests.get(url, timeout=15, proxies=proxy, headers=self.header)
+        if r.status_code == 200:
+            return r.json()
+        else:
+            return None
+
     @util.timing
     def getData(self):
         list_params = self.__getListOfParams()

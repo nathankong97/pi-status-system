@@ -59,6 +59,38 @@ def table_usage():
 def flight_date_dashboard():
     return render_template("date_dashboard.html")
 
+@app.route("/flight_num_retrieval")
+def flight_num():
+    return render_template("flight_num.html")
+
+@app.route("/airport_detail", methods=["GET"])
+def airport_detail():
+    name = str(request.args["airport-input"]).upper()
+    d = db()
+    pop_airline = d.fetchall(db.POP_AIRLINE_BY_AIRPORT_QUERY.format(name))
+    airline_list = [{
+        "name": "{} ({})".format(i[1], i[0]),
+        "count": i[2],
+        "url": "https://content.airhex.com/content/logos/airlines_{}_50_15_r.png?proportions=keep".format(i[0])
+    } for i in pop_airline]
+    dep_delay = d.fetch(db.AVG_DEP_DELAY_QUERY.format(name))
+    arr_delay = d.fetch(db.AVG_ARR_DELAY_QUERY.format(name))
+    ontime_rate = d.fetchall(db.AIRPORT_DELAY_COUNT_QUERY.format(name, name))
+    ontime_arr = d.fetchall(db.AIRPORT_DELAY_ARRIVAL_COUNT_QUERY.format(name, name))
+    unique_dest = len(d.fetchall(db.AIRPORT_UNIQUE_DESTINATION_QUERY.format(name)))
+    pop_aircraft = d.fetchall(db.POP_AIRCRAFT_BY_AIRPORT_QUERY.format(name))
+    ac_list = [{
+        "name": "{} ({})".format(i[0], i[2]),
+        "count": i[1]
+    } for i in pop_aircraft]
+    return render_template("airport_detail.html",
+                           pop_airlines=airline_list, ontime_arr=ontime_arr, total_dest=unique_dest,
+                           ontime_rate = ontime_rate, dep=dep_delay, arr=arr_delay, pop_aircraft=ac_list)
+
+@app.route("/airline_hub")
+def airline_hub():
+    return render_template("airline_hub.html")
+
 if __name__ == '__main__':
     initialize_routes(api)
     app.run(host='0.0.0.0')

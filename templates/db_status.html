@@ -11,35 +11,38 @@
 
 
 {% block body %}
-<div class="col-lg-12 col-md-12 col-sm12">
-  <div class="card">
-    <div class="card-header">
-	  <h3 class="card-title">Databases  (Total: {{ db_list|length }})</h3>
-    </div>
-	<div class="card-body scroll">
-	  <table id="log-table" class="table table-sm table-hover text-nowrap">
-	    <thead>
-		  <tr>
-			<th>#</th>
-		    <th>Database Name</th>
-			<th>Usage (in MB)</th>
-		  </tr>
-		</thead>
-		<tbody>
-		{% for dictionary in db_list %}
-		<tr>
-		  <td>{{ loop.index }}</td>
-		  <td>
-		    <form action="/db_usage/table" method="POST" target="_blank">
-		      <input type="submit" class="button-link" name="db_name" value="{{ dictionary.name }}" />
-		    </form>
-		  </td>
-		  <td>{{ dictionary.usage }}</td>
-		</tr>
-		{% endfor %}
-		</tbody>
-	  </table>
-    </div>
-  </div>
+<div class="row">
+	<div class="col-lg-12 col-md-12 col-sm12">
+	  <div class="card">
+		<div class="card-header">
+		  <h3 class="card-title">Databases  (Total: {{ db_list|length }})</h3>
+		</div>
+		<div class="card-body scroll">
+		  <table id="log-table" class="table table-sm table-hover text-nowrap">
+			<thead>
+			  <tr>
+				<th>#</th>
+				<th>Database Name</th>
+				<th>Usage (in MB)</th>
+			  </tr>
+			</thead>
+			<tbody>
+			{% for dictionary in db_list %}
+			<tr>
+			  <td>{{ loop.index }}</td>
+			  <td>
+				<form action="/db_usage/table" method="POST" target="_blank">
+				  <input type="submit" class="button-link" name="db_name" value="{{ dictionary.name }}" />
+				</form>
+			  </td>
+			  <td>{{ dictionary.usage }}</td>
+			</tr>
+			{% endfor %}
+			</tbody>
+		  </table>
+		</div>
+	  </div>
+	</div>
 </div>
+
 {% endblock %}

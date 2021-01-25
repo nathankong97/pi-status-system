@@ -19,20 +19,15 @@
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
   <!-- App Css Edit Style -->
   <link rel="stylesheet" href="{{url_for('static', filename='./css/app.css')}}">
+
 {% endblock %}
 </head>
-<body class="hold-transition layout-top-nav">
+<body class="sidebar-mini" style="height: auto;">
 <div class="wrapper">
 
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
     <div class="container">
-      <a href="/" class="navbar-brand">
-        <img src="{{url_for('static', filename='./images/pi.png')}}" alt="Raspberry=Pi Logo" class="brand-image img-circle elevation-2"
-             style="opacity: .8">
-        <span class="brand-text font-weight-light">Nathan & Yuqi Home System</span>
-      </a>
-      
       <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -82,8 +77,98 @@
   </nav>
   <!-- /.navbar -->
 
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+     <a href="/" class="brand-link">
+        <span class="brand-text font-weight-light">Nathan & Yuqi Home System</span>
+      </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <!-- Add icons to the links using the .nav-icon class
+               with font-awesome or any other icon font library -->
+          <li class="nav-item menu-open">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <p>
+                Public Pages
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview" style="display: block;">
+              <li class="nav-item">
+                <a href="/" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Home</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="https://aoe2.net/#profile-76561198201007834" target="_blank" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>AOE2: DE</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/log" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Log</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/search" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Flight Tracker</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/db_usage" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Database</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/airline_hub" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Airline Hub Search</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item menu-open">
+            <a href="" class="nav-link">
+              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <p>
+                Visualization
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview" style="display: block;">
+              <li class="nav-item">
+                <a href="/flight_date_visualization" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Flight Daily Trends</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/flight_num_retrieval" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Flight Number Retrieval</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+  </aside>
+
   <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
+  <div class="content-wrapper" style="min-height: 206px;">
     <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container">
@@ -134,7 +219,7 @@
       Anything you want
     </div>
     <!-- Default to the left -->
-    <strong>Copyright &copy; 2014-2020 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+    <strong>Copyright &copy; 2014-2020 <a href="https://adminlte.io/themes/v3/">AdminLTE.io</a>.</strong> All rights reserved.
   </footer>
 </div>
 <!-- ./wrapper -->

@@ -235,6 +235,13 @@ def get_brand_list():
         data = json.load(f)
         return data
 
+def get_all_airports():
+    with open("/home/pi/pi-status-system/data/airports.txt") as f:
+        data = [i.strip() for i in f.readlines()]
+    with open("/home/pi/pi-status-system/data/airports_jp.txt") as f:
+        data2 = [i.strip() for i in f.readlines()]
+    return data + data2
+
 if __name__ == "__main__":
     #from api.api import *
     #FlightScheduleApi().get("IND", 1)

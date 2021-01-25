@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+
+{% block head %}
+{{ super() }}
+<!-- DataTables -->
+<link rel="stylesheet"
+    href="{{ url_for('static', filename='./plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+<link rel="stylesheet"
+    href="{{ url_for('static', filename='./plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+
+{% endblock %}
+
+{% block title %}Flight Number Retrieval{% endblock %}
+
+{% block subtitle %}Flight Number Retrieval{% endblock %}
+
+{% block tree %}
+{{ super() }}
+<li class="breadcrumb-item">Flight Number Retrieval</li>
+{% endblock %}
+
+{% block body %}
+
+<div class="col-lg-12 col-md-12 col-sm12">
+  <div class="card">
+    <div class="card-header">
+	  <h3 class="card-title">Airline Search</h3>
+    </div>
+	<div class="card-body scroll">
+        <form>
+            <label for="airline">Airline (IATA)</label>
+            <input type="text" class="form-control" id="airline" placeholder="Please Enter Airline's IATA Code">
+        </form>
+    </div>
+    <div class="card-footer">
+        <button type="submit" class="btn btn-info" onclick="getFlightNumResult();">Search</button>
+    </div>
+  </div>
+</div>
+  <div class="col-lg-12 col-md-12 col-sm12">
+  <div class="card">
+    <div class="card-header">
+	  <h3 class="card-title">Flight Number Result</h3>
+    </div>
+	<div class="card-body">
+        <table id="flightNumTable" class="display" style="width:100%">
+            <thead>
+              <tr>
+                  <th>Flight #</th>
+                  <th>Origin</th>
+                  <th>Origin City</th>
+                  <th>Origin Country</th>
+                  <th>Arrival</th>
+                  <th>Arrival City</th>
+                  <th>Arrival Country</th>
+              </tr>
+            </thead>
+            <tfoot>
+              <tr>
+                  <th>Flight #</th>
+                  <th>Origin</th>
+                  <th>Origin City</th>
+                  <th>Origin Country</th>
+                  <th>Arrival</th>
+                  <th>Arrival City</th>
+                  <th>Arrival Country</th>
+              </tr>
+            </tfoot>
+        </table>
+    </div>
+  </div>
+</div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script src="{{ url_for('static', filename='./js/flightNum.app.js') }}"></script>
+{% endblock %}

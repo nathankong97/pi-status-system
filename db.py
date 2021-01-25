@@ -19,7 +19,7 @@ class db(queries):
         cur = self.connection.cursor(buffered=True)
         cur.execute(query)
         row = cur.fetchone()
-        return row
+        return row[0]
 
     def fetchall(self, query, show_columns=False):
         cur = self.connection.cursor(buffered=True)
@@ -55,5 +55,6 @@ class db(queries):
 
 if __name__ == "__main__":
     d = db()
-    data = d.fetchall(d.COUNT_BY_DAY_QUERY)
+    query = d.COORDINATE_BY_AIRPORT_QUERY.format("IND")
+    data = d.fetch(query)
     print(data)
